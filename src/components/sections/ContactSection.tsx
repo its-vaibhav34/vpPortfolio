@@ -3,7 +3,6 @@
 import type React from "react"
 import { useState } from "react"
 import { sections } from "../data"
-import { FaEnvelope, FaLinkedin, FaGithub, FaTwitter, FaPhone } from "react-icons/fa" // Import react-icons
 
 interface ContactData {
   email: string
@@ -16,69 +15,48 @@ interface ContactData {
 }
 
 export default function ContactSection() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
   const [submissionStatus, setSubmissionStatus] = useState<"success" | "error" | null>(null)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showPhoneBox, setShowPhoneBox] = useState(false) // New state for phone box
+  const [showPhone, setShowPhone] = useState(false)
 
   const contact = sections.contact as ContactData
 
-  const contactMethods = [
+  const contactLinks = [
     {
       label: "Email",
       value: contact.email,
       href: `mailto:${contact.email}`,
-      icon: <FaEnvelope className="text-red-400" />,
-      color: "from-red-400 to-pink-400",
-      description: "Drop me a line anytime",
-      type: "link",
+      description: "Drop me a line",
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        </svg>
+      ),
     },
     {
       label: "LinkedIn",
       value: "Connect with me",
       href: contact.linkedin,
-      icon: <FaLinkedin className="text-blue-400" />,
-      color: "from-blue-400 to-cyan-400",
-      description: "Let's build our network",
-      type: "link",
+      description: "Let's network",
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+        </svg>
+      ),
     },
     {
       label: "GitHub",
-      value: "Follow my work",
+      value: "View my repos",
       href: contact.github,
-      icon: <FaGithub className="text-gray-300" />,
-      color: "from-gray-400 to-gray-600",
-      description: "Check out my repositories",
-      type: "link",
+      description: "Open source work",
+      icon: (
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+        </svg>
+      ),
     },
-    ...(contact.twitter
-      ? [
-          {
-            label: "Twitter",
-            value: "Follow me",
-            href: contact.twitter,
-            icon: <FaTwitter className="text-sky-400" />,
-            color: "from-sky-400 to-blue-400",
-            description: "Latest updates and thoughts",
-            type: "link",
-          },
-        ]
-      : []),
-    ...(contact.phone
-      ? [
-          {
-            label: "Phone",
-            value: "Call me",
-            href: null, // No direct href for phone
-            icon: <FaPhone className="text-green-400" />,
-            color: "from-green-400 to-emerald-400",
-            description: "Direct communication",
-            type: "button", // Indicate it's a button, not a link
-          },
-        ]
-      : []),
   ]
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -94,276 +72,160 @@ export default function ContactSection() {
       const response = await fetch(form.action, {
         method: form.method,
         body: data,
-        headers: {
-          Accept: "application/json", // Important for Formsubmit.co AJAX
-        },
+        headers: { Accept: "application/json" },
       })
 
       if (response.ok) {
         setSubmissionStatus("success")
-        setStatusMessage("Message sent successfully! I'll get back to you soon.")
-        setFormData({ name: "", email: "", message: "" }) // Clear form on success
+        setStatusMessage("Message sent! I'll get back to you soon.")
+        setFormData({ name: "", email: "", message: "" })
       } else {
-        const errorData = await response.json()
         setSubmissionStatus("error")
-        setStatusMessage(errorData.message || "Failed to send message. Please try again.")
+        setStatusMessage("Failed to send. Please try again.")
       }
-    } catch (error) {
+    } catch {
       setSubmissionStatus("error")
-      setStatusMessage("An error occurred. Please check your network and try again.")
+      setStatusMessage("Network error. Please check your connection.")
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handlePhoneClick = () => {
-    setShowPhoneBox(true)
-  }
-
   return (
-    <div className="relative max-w-6xl mx-auto">
-      {/* Optimized circuit background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <svg className="w-full h-full" viewBox="0 0 1000 800">
-          {[...Array(15)].map((_, i) => (
-            <g key={i}>
-              <rect
-                x={Math.random() * 1000}
-                y={Math.random() * 800}
-                width="2"
-                height="20"
-                fill="currentColor"
-                className="text-cyan-400 animate-pulse"
-              />
-              <rect
-                x={Math.random() * 1000}
-                y={Math.random() * 800}
-                width="20"
-                height="2"
-                fill="currentColor"
-                className="text-cyan-400 animate-pulse"
-              />
-            </g>
-          ))}
-        </svg>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
-        {/* Contact methods */}
-        <div className="space-y-8">
-          <div className="text-center lg:text-left mb-8">
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-4">
-              Let's Connect
-            </h3>
-            <p className="text-gray-300 text-lg">Ready to bring your ideas to life? Let's talk!</p>
+    <div className="max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Left: Contact methods */}
+        <div className="space-y-6">
+          <div className="mb-6">
+            <h3 className="font-display text-xl font-bold text-stone-100 mb-2">Let's Connect</h3>
+            <p className="text-stone-400 text-sm">Ready to bring your ideas to life? Let's talk.</p>
             {contact.availability && (
-              <div className="mt-4 inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/50">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2"></span>
-                <span className="text-green-400 text-sm font-semibold">{contact.availability}</span>
+              <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                <span className="text-emerald-400 text-xs font-mono">{contact.availability}</span>
               </div>
             )}
           </div>
-          {contactMethods.map((method, index) => {
-            const CardContent = (
-              <div
-                key={index} // Added key property
-                className="relative p-8 rounded-2xl border border-cyan-400/30 backdrop-blur-xl
-                           bg-gradient-to-br from-black/60 to-cyan-900/20
-                           hover:from-black/80 hover:to-cyan-900/40
-                           transition-all duration-300 hover:scale-105 cursor-pointer
-                           hover:shadow-xl hover:shadow-cyan-500/25"
-              >
-                <div className="flex items-center gap-6">
-                  <div className="text-6xl group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                    {method.icon}
-                  </div>
-                  <div className="flex-1">
-                    <h4
-                      className={`text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${method.color} mb-2`}
-                    >
-                      {method.label}
-                    </h4>
-                    <p className="text-gray-400 mb-3">{method.description}</p>
-                    <span
-                      className="inline-flex items-center px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500
-                                 text-white font-medium transition-all duration-200
-                                 group-hover:from-cyan-400 group-hover:to-blue-400 group-hover:scale-105
-                                 group-hover:shadow-lg group-hover:shadow-cyan-500/50"
-                    >
-                      {method.value} →
-                    </span>
-                  </div>
-                </div>
-                {hoveredCard === index && (
-                  <div className="absolute inset-0 rounded-2xl border-2 border-cyan-400/50 animate-pulse"></div>
+
+          {contactLinks.map((method, index) => (
+            <a
+              key={index}
+              href={method.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="forge-card-emerald p-5 rounded-xl flex items-center gap-4 group block"
+            >
+              <div className="text-emerald-400 group-hover:scale-110 transition-transform duration-200">
+                {method.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-display text-sm font-semibold text-stone-200">{method.label}</h4>
+                <p className="text-stone-500 text-xs">{method.description}</p>
+              </div>
+              <svg className="w-4 h-4 text-stone-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          ))}
+
+          {/* Phone button */}
+          {contact.phone && (
+            <button
+              onClick={() => setShowPhone(!showPhone)}
+              className="forge-card-emerald p-5 rounded-xl flex items-center gap-4 group w-full text-left"
+            >
+              <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+              <div className="flex-1">
+                <h4 className="font-display text-sm font-semibold text-stone-200">Phone</h4>
+                {showPhone ? (
+                  <p className="text-emerald-400 font-mono text-sm">{contact.phone}</p>
+                ) : (
+                  <p className="text-stone-500 text-xs">Click to reveal</p>
                 )}
               </div>
-            )
+            </button>
+          )}
 
-            if (method.type === "link") {
-              return (
-                <a
-                  key={index} // Added key property
-                  href={method.href as string}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative block"
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                >
-                  {CardContent}
-                </a>
-              )
-            } else {
-              return (
-                <div
-                  key={index} // Added key property
-                  className="group relative block"
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  onClick={handlePhoneClick} // Click handler for the phone button
-                >
-                  {CardContent}
-                </div>
-              )
-            }
-          })}
-          {/* Location info */}
+          {/* Location */}
           {contact.location && (
-            <div className="p-6 rounded-xl border border-cyan-400/30 bg-gradient-to-br from-black/60 to-cyan-900/20">
-              <div className="flex items-center gap-4">
-                <span className="text-4xl">📍</span>
-                <div>
-                  <h4 className="text-cyan-400 font-semibold text-lg">Location</h4>
-                  <p className="text-gray-300">{contact.location}</p>
-                </div>
-              </div>
+            <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-stone-800/30 border border-stone-700/30">
+              <svg className="w-4 h-4 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              <span className="text-stone-400 text-sm">{contact.location}</span>
             </div>
           )}
         </div>
-        {/* Contact form */}
-        <div className="relative">
-          <div
-            className="relative p-8 rounded-2xl border border-cyan-400/30 backdrop-blur-xl
-                       bg-gradient-to-br from-black/60 to-cyan-900/20"
+
+        {/* Right: Contact form */}
+        <div className="forge-card p-6 rounded-xl">
+          <h3 className="font-display text-lg font-bold text-stone-100 mb-6">Send a Message</h3>
+
+          <form
+            className="space-y-4"
+            action="https://formsubmit.co/ajax/vaibhav13467@gmail.com"
+            method="POST"
+            onSubmit={handleSubmit}
           >
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-8 text-center">
-              Send Message
-            </h3>
-            <form
-              className="space-y-6"
-              action="https://formsubmit.co/ajax/vaibhav13467@gmail.com"
-              method="POST"
-              onSubmit={handleSubmit}
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value="New Portfolio Contact!" />
+
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="Your Name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg bg-stone-800/50 border border-stone-700/50 text-stone-200 placeholder-stone-600
+                         focus:border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500/25 transition-all duration-200 text-sm"
+            />
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Your Email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg bg-stone-800/50 border border-stone-700/50 text-stone-200 placeholder-stone-600
+                         focus:border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500/25 transition-all duration-200 text-sm"
+            />
+            <textarea
+              name="message"
+              required
+              rows={5}
+              placeholder="Your Message"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg bg-stone-800/50 border border-stone-700/50 text-stone-200 placeholder-stone-600
+                         focus:border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500/25 transition-all duration-200 resize-none text-sm"
+            />
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full forge-btn-primary py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_subject" value="New Contact Form Submission!" /> {/* Custom subject */}
-              <input
-                type="hidden"
-                name="_autoresponse"
-                value="Thank you for your message! I'll get back to you as soon as possible."
-              />{" "}
-              {/* Auto-reply */}
-              {/* You can also add _template for custom email templates if configured on Formsubmit.co */}
-              <div className="relative group">
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-6 py-4 rounded-xl border border-cyan-400/30
-                             bg-black/50 text-white placeholder-gray-400
-                             focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50
-                             transition-all duration-300"
-                />
-              </div>
-              <div className="relative group">
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-6 py-4 rounded-xl border border-cyan-400/30
-                             bg-black/50 text-white placeholder-gray-400
-                             focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50
-                             transition-all duration-300"
-                />
-              </div>
-              <div className="relative group">
-                <textarea
-                  placeholder="Your Message"
-                  name="message"
-                  required
-                  rows={6}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-6 py-4 rounded-xl border border-cyan-400/30
-                             bg-black/50 text-white placeholder-gray-400 resize-none
-                             focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50
-                             transition-all duration-300"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full group relative overflow-hidden py-4 px-8 rounded-xl
-                           bg-gradient-to-r from-cyan-500 to-blue-500
-                           hover:from-cyan-400 hover:to-blue-400
-                           text-white font-bold transition-all duration-300
-                           hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50
-                           disabled:opacity-50 disabled:cursor-not-allowed"
+              {isSubmitting ? "Sending..." : "Send Message"}
+            </button>
+
+            {submissionStatus && statusMessage && (
+              <div
+                className={`p-3 rounded-lg text-center text-sm font-medium ${
+                  submissionStatus === "success"
+                    ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"
+                    : "bg-red-500/10 border border-red-500/20 text-red-400"
+                }`}
               >
-                <span className="relative z-10">{isSubmitting ? "Sending..." : "Send Message →"}</span>
-              </button>
-              {submissionStatus && statusMessage && (
-                <div
-                  className={`mt-4 p-3 rounded-lg text-center font-semibold
-                    ${submissionStatus === "success" ? "bg-green-900/20 text-green-400 border border-green-400/50" : "bg-red-900/20 text-red-400 border border-red-400/50"}
-                    transition-opacity duration-300 ease-in-out`}
-                  role="alert"
-                  aria-live="assertive"
-                >
-                  {statusMessage}
-                </div>
-              )}
-            </form>
-          </div>
+                {statusMessage}
+              </div>
+            )}
+          </form>
         </div>
       </div>
-
-      {/* Phone Number Display Box */}
-      {showPhoneBox && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm pointer-events-auto"
-            onClick={() => setShowPhoneBox(false)}
-          />
-
-          {/* Phone Box */}
-          <div
-            className="pointer-events-auto relative p-8 rounded-2xl border border-green-400/50 backdrop-blur-xl
-                       bg-gradient-to-br from-black/70 to-green-900/20 text-white text-center
-                       shadow-2xl shadow-green-500/25 animate-slideInUp max-w-md w-full mx-4"
-          >
-            <button
-              onClick={() => setShowPhoneBox(false)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-red-500/20 text-red-400
-                         flex items-center justify-center transition-all duration-200 hover:scale-110 text-xl"
-            >
-              ✕
-            </button>
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-4">
-              My Phone Number
-            </h3>
-            <p className="text-5xl font-mono text-white tracking-wide mb-6 text-shadow-neon">{contact.phone}</p>
-            <p className="text-gray-400">Feel free to reach out!</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

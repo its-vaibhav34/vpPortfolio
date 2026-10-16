@@ -27,7 +27,7 @@ export default function FloatingTooltip({
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.position.y =
-        position[1] + Math.sin(state.clock.elapsedTime * 2) * 0.05
+        position[1] + Math.sin(state.clock.elapsedTime * 1.5) * 0.04
     }
   })
 
@@ -42,39 +42,39 @@ export default function FloatingTooltip({
     >
       <Html transform center distanceFactor={5} style={{ pointerEvents: "none" }}>
         <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-md scale-110 animate-pulse" />
-
-          {/* Tooltip box */}
+          {/* Tooltip pill */}
           <div
-            className="relative px-3 py-1.5 rounded-full border border-cyan-400/40
-                       bg-white/10 text-white shadow-md backdrop-blur-md
-                       flex items-center gap-1"
+            className="relative px-3 py-1.5 rounded-full flex items-center gap-1.5"
             style={{
+              background: "rgba(10, 10, 15, 0.85)",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              backdropFilter: "blur(8px)",
               fontSize: "10px",
-              fontWeight: 500,
+              fontWeight: 600,
               whiteSpace: "nowrap",
-              overflow: "visible",
-              textOverflow: "unset",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Space Grotesk', sans-serif",
+              letterSpacing: "0.05em",
+              color: "#f5f5f4",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.4), 0 0 20px rgba(245,158,11,0.08)",
             }}
           >
-            <span style={{ minWidth: "16px", textAlign: "center" }}>{icon}</span>
+            <span style={{ minWidth: "14px", textAlign: "center", fontSize: "11px" }}>
+              {icon}
+            </span>
             <span>{text}</span>
 
-            {/* 🔽 Tooltip arrow */}
+            {/* Arrow */}
             <div
               style={{
                 position: "absolute",
-                bottom: "-5px",
+                bottom: "-4px",
                 left: "50%",
-                transform: "translateX(-50%)",
-                width: "0",
-                height: "0",
-                borderLeft: "6px solid transparent",
-                borderRight: "6px solid transparent",
-                borderTop: "6px solid rgba(6, 182, 212, 0.6)", // cyan color
-                filter: "drop-shadow(0 0 4px rgba(6, 182, 212, 0.5))", // glow
+                transform: "translateX(-50%) rotate(45deg)",
+                width: "8px",
+                height: "8px",
+                background: "rgba(10, 10, 15, 0.85)",
+                borderRight: "1px solid rgba(245, 158, 11, 0.25)",
+                borderBottom: "1px solid rgba(245, 158, 11, 0.25)",
               }}
             />
           </div>

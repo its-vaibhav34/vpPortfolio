@@ -1,187 +1,103 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { sections } from "../data"
 
 interface Project {
   title: string
   description: string
   link: string
-  tech?: string[]
+  liveDemo?: string
+  technologies?: string[]
   status?: string
+  category?: string
+  featured?: boolean
+  metrics?: { users?: string; performance?: string; uptime?: string }
 }
 
 export default function ProjectsSection() {
-  const [selectedProject, setSelectedProject] = useState<number | null>(null)
-  const [visibleProjects, setVisibleProjects] = useState<number[]>([])
-  const projectRefs = useRef<(HTMLDivElement | null)[]>([])
-
+  const [expandedProject, setExpandedProject] = useState<number | null>(null)
   const projects = sections.projects as Project[]
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const index = Number.parseInt(entry.target.getAttribute("data-index") || "0")
-          if (entry.isIntersecting) {
-            setVisibleProjects((prev) => [...prev, index])
-          }
-        })
-      },
-      { threshold: 0.2 },
-    )
-
-    projectRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref)
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <div className="relative">
-      {/* Animated background particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-float opacity-30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Holographic project grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
-        {projects.map((project, index) => (
-          <div
-            key={index}
-          ref={(el) => {
-  projectRefs.current[index] = el
-}}
-
-            data-index={index}
-            className={`group relative transition-all duration-1000 ${
-              visibleProjects.includes(index)
-                ? "opacity-100 translate-y-0 rotate-0"
-                : "opacity-0 translate-y-20 rotate-3"
-            }`}
-            style={{ transitionDelay: `${index * 0.3}s` }}
-          >
-            {/* Holographic container */}
-            <div
-              className="relative p-8 rounded-2xl border border-cyan-400/30 backdrop-blur-xl
-                         bg-gradient-to-br from-black/60 via-cyan-900/20 to-black/60
-                         hover:from-black/80 hover:via-cyan-900/40 hover:to-black/80
-                         transition-all duration-700 hover:scale-105 cursor-pointer
-                         hover:shadow-2xl hover:shadow-cyan-500/50"
-              onClick={() => setSelectedProject(selectedProject === index ? null : index)}
-            >
-              {/* Scanning lines effect */}
-              <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-scan opacity-0 group-hover:opacity-100" />
-                <div
-                  className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-l from-transparent via-purple-400 to-transparent animate-scan opacity-0 group-hover:opacity-100"
-                  style={{ animationDelay: "0.5s" }}
-                />
-              </div>
-
-              {/* Project status indicator */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 animate-pulse shadow-lg shadow-green-400/50">
-                <div className="absolute inset-1 rounded-full bg-green-300 animate-ping" />
-              </div>
-
-              {/* Project header */}
-              <div className="relative z-10 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
-                    {project.title}
-                  </h3>
-                  <div className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/50">
-                    <span className="text-green-400 text-xs font-bold tracking-wider">● LIVE</span>
-                  </div>
-                </div>
-
-                {/* Glitch effect title */}
-                <div className="absolute top-0 left-0 text-3xl font-bold text-cyan-400/20 animate-glitch pointer-events-none">
+    <div className="space-y-6">
+      {projects.map((project, index) => (
+        <div
+          key={index}
+          className="forge-card-indigo p-6 rounded-xl cursor-pointer group"
+          onClick={() => setExpandedProject(expandedProject === index ? null : index)}
+          style={{ animationDelay: `${index * 100}ms` }}
+        >
+          {/* Header row */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h3 className="font-display text-xl font-bold text-stone-100 group-hover:text-indigo-300 transition-colors">
                   {project.title}
-                </div>
+                </h3>
+                {project.featured && (
+                  <span className="forge-badge-amber text-[10px]">Featured</span>
+                )}
               </div>
-
-              {/* Project description with typewriter effect */}
-              <div className="relative mb-6">
-                <p className="text-gray-300 leading-relaxed text-lg">{project.description}</p>
-              </div>
-
-              {/* Tech stack with animated badges */}
-              <div className="flex flex-wrap gap-3 mb-6">
-                {["React", "TypeScript", "Three.js", "Firebase"].map((tech, techIndex) => (
-                  <div
-                    key={tech}
-                    className="group/tech relative px-4 py-2 rounded-full border border-cyan-400/30 
-                               bg-gradient-to-r from-cyan-500/10 to-blue-500/10
-                               hover:from-cyan-500/30 hover:to-blue-500/30
-                               transition-all duration-300 hover:scale-110"
-                    style={{ animationDelay: `${techIndex * 0.1}s` }}
-                  >
-                    <span className="text-cyan-400 text-sm font-medium">{tech}</span>
-                    <div className="absolute inset-0 rounded-full bg-cyan-400/20 opacity-0 group-hover/tech:opacity-100 animate-pulse" />
-                  </div>
-                ))}
-              </div>
-
-              {/* Interactive buttons */}
-              <div className="flex gap-4">
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 group/btn relative overflow-hidden py-4 px-6 rounded-xl
-                             bg-gradient-to-r from-cyan-500 to-blue-500
-                             hover:from-cyan-400 hover:to-blue-400
-                             text-white font-bold text-center transition-all duration-300
-                             hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50"
-                >
-                  <span className="relative z-10">LAUNCH PROJECT →</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-                </a>
-
-                <button
-                  className="px-6 py-4 rounded-xl border-2 border-cyan-400/50 text-cyan-400 
-                                   hover:bg-cyan-400/10 hover:border-cyan-400 transition-all duration-300
-                                   hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25"
-                >
-                  <span className="text-xl">⭐</span>
-                </button>
-              </div>
-
-              {/* Expanded details */}
-              {selectedProject === index && (
-                <div className="mt-6 pt-6 border-t border-cyan-400/30 animate-slideInUp">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-cyan-400 font-semibold">Status:</span>
-                      <span className="text-green-400 ml-2">Production Ready</span>
-                    </div>
-                    <div>
-                      <span className="text-cyan-400 font-semibold">Performance:</span>
-                      <span className="text-yellow-400 ml-2">98% Lighthouse</span>
-                    </div>
-                  </div>
-                </div>
+              {project.category && (
+                <span className="forge-badge-indigo text-[10px]">{project.category}</span>
               )}
+            </div>
 
-              {/* Holographic glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Status indicator */}
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-emerald-400 text-xs font-mono">{project.status || "Live"}</span>
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Description */}
+          <p className="text-stone-400 leading-relaxed mb-4">{project.description}</p>
+
+          {/* Tech stack */}
+          {project.technologies && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {project.technologies.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2.5 py-1 rounded-md text-xs font-mono text-stone-400 bg-stone-800/50 border border-stone-700/50
+                             hover:border-indigo-500/30 hover:text-indigo-300 transition-all duration-200"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div className="flex gap-3">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="forge-btn-primary px-4 py-2 text-xs flex items-center gap-2"
+            >
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              Source Code
+            </a>
+          </div>
+
+          {/* Expanded metrics */}
+          {expandedProject === index && project.metrics && (
+            <div className="mt-5 pt-5 border-t border-indigo-500/10 grid grid-cols-3 gap-4 animate-fade-up">
+              {Object.entries(project.metrics).map(([key, value]) => (
+                <div key={key} className="text-center">
+                  <div className="font-display text-xl font-bold text-indigo-400">{value}</div>
+                  <div className="text-xs text-stone-500 capitalize">{key}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   )
 }

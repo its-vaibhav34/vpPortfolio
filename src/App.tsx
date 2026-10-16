@@ -1,34 +1,44 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useCallback } from "react"
+import { useGLTF } from "@react-three/drei"
 import LandingPage from "./components/landing/LandingPage"
-import NeuroverseLoader from "./components/landing/NeuroverseLoader"
+import ForgeLoader from "./components/landing/ForgeLoader"
 import ThreeDRoomExperience from "./components/ThreeDRoomExperience"
+
+// Preload the 3D model so it starts downloading immediately
+useGLTF.preload("/3droom2.glb")
 
 export default function App() {
   const [section, setSection] = useState("")
-  const [hasEnteredNeuroverse, setHasEnteredNeuroverse] = useState(false)
-  const [showLoader, setShowLoader] = useState(false)
+  const [phase, setPhase] = useState<"landing" | "loading" | "room">("landing")
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const handleEnterNeuroverse = () => {
-    setShowLoader(true)
-  }
+  const handleEnterPortfolio = useCallback(() => {
+    setPhase("loading")
+  }, [])
 
-  const handleLoaderComplete = () => {
-    setShowLoader(false)
-    setHasEnteredNeuroverse(true)
-  }
+  const handleLoadComplete = useCallback(() => {
+    setPhase("room")
+  }, [])
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-black">
-      {!hasEnteredNeuroverse ? (
-        <LandingPage onEnterNeuroverse={handleEnterNeuroverse} />
-      ) : (
-        <ThreeDRoomExperience section={section} setSection={setSection} contentRef={contentRef} />
+    <div className="fixed inset-0 w-full h-full bg-obsidian film-grain">
+      {phase === "landing" && (
+        <LandingPage onEnterPortfolio={handleEnterPortfolio} />
       )}
 
-      {showLoader && <NeuroverseLoader onComplete={handleLoaderComplete} />}
+      {phase === "loading" && (
+        <ForgeLoader onComplete={handleLoadComplete} />
+      )}
+
+      {phase === "room" && (
+        <ThreeDRoomExperience
+          section={section}
+          setSection={setSection}
+          contentRef={contentRef}
+        />
+      )}
     </div>
   )
 }
