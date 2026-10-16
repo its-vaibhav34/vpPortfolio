@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { personalInfo, sections } from "../data"
+import { personalInfo } from "../data"
 
 export default function AboutSection() {
   const [typedText, setTypedText] = useState("")

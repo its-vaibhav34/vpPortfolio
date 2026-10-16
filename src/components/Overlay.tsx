@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, type ReactNode } from "react"
 import LoadingShimmer from "./LoadingShimmer"
 import ProjectsSection from "./sections/ProjectsSection"
 import SkillsSection from "./sections/SkillsSection"
@@ -16,7 +16,7 @@ interface Props {
 }
 
 // Section metadata for consistent theming
-const sectionMeta: Record<string, { title: string; accent: string; icon: JSX.Element }> = {
+const sectionMeta: Record<string, { title: string; accent: string; icon: ReactNode }> = {
   projects: {
     title: "Projects",
     accent: "text-indigo-400",
