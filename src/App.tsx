@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react"
 import { useGLTF } from "@react-three/drei"
 import LandingPage from "./components/landing/LandingPage"
-import ForgeLoader from "./components/landing/ForgeLoader"
+import { RoomAssemblyLoader } from "./components/landing/RoomAssemblyLoader"
 import ThreeDRoomExperience from "./components/ThreeDRoomExperience"
 
 // Preload the 3D model so it starts downloading immediately
@@ -29,7 +29,7 @@ export default function App() {
       )}
 
       {phase === "loading" && (
-        <ForgeLoader onComplete={handleLoadComplete} />
+        <RoomAssemblyLoader onComplete={handleLoadComplete} autoLoop={false} />
       )}
 
       {phase === "room" && (

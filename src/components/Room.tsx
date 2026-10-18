@@ -45,9 +45,10 @@ export default function Room({ onSelect, isAnySectonOpen = false }: Props) {
         position={[-0.0, 1.39, -1.1]}
         label="about"
         onSelect={onSelect}
+        size={[0.7, 0.7, 0.4]}
         isAnySectonOpen={isAnySectonOpen}
         tooltipScale={0.8}
-        tooltipOffset={[0, 0.4, 0]}
+        tooltipOffset={[0, 0.55, 0]}
       />
       <ClickableBox
         position={[1.1, 1.6, -1.3]}

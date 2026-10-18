@@ -95,9 +95,10 @@ export default function ThreeDRoomExperience({ section, setSection, contentRef }
 
       {/* Hint at bottom when no section is open */}
       {!section && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 animate-fade-up">
-          <span className="font-mono text-[10px] text-stone-600 tracking-[0.3em] uppercase">
-            Click objects to explore
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0d17]/85 border border-white/10 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.6)] pointer-events-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="font-mono text-[10px] text-stone-300 tracking-[0.22em] uppercase font-medium">
+            Hover & click objects to explore
           </span>
         </div>
       )}
