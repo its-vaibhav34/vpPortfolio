@@ -6,7 +6,7 @@ export const personalInfo = {
   title: "Computer Science Undergraduate | Full-Stack & IoT Developer",
   bio: "Computer Science undergraduate with hands-on experience in Java, full-stack web development, and IoT, focused on building practical solutions through real-world projects, hackathons, and continuous problem-solving.",
   location: "Chitkara University Punjab, India",
-  profileImage: "/placeholder.svg?height=400&width=400",
+  profileImage: "/profile.jpg",
   resume: "/resume.pdf",
 };
 
@@ -263,6 +263,43 @@ export const sections = {
       technologies: ["Arduino", "IoT Development", "Circuit Design", "Embedded Programming", "Hardware Integration"],
       type: "current" as const,
       companySize: "Live Project",
+      location: "Punjab, India",
+    },
+    {
+      role: "Promotions Team Member",
+      company: "Open Source Chandigarh",
+      duration: "Oct 2025 – Oct 2026",
+      description:
+        "Contributing to the promotions and outreach team at Open Source Chandigarh, a community driving open-source culture across the region. Responsible for creating content, coordinating event promotion, and expanding community reach across platforms.",
+      logo: "🌐",
+      color: "from-violet-400 to-purple-400",
+      achievements: [
+        "Promoted open-source events and workshops to a growing developer community across Chandigarh and Punjab.",
+        "Assisted in managing social media presence and digital outreach campaigns for community events.",
+        "Collaborated with organizers to onboard contributors and increase event participation.",
+      ],
+      technologies: ["Community Building", "Content Creation", "Social Media", "Open Source", "Event Coordination"],
+      type: "current" as const,
+      companySize: "Community Org",
+      location: "Chandigarh, India",
+    },
+    {
+      role: "Class Representative",
+      company: "Chitkara University Punjab",
+      duration: "Aug 2024 – Jul 2026",
+      description:
+        "Elected as Class Representative for the Computer Science batch, serving as the primary liaison between students and faculty. Responsible for communicating academic updates, coordinating class activities, and representing student concerns at the departmental level.",
+      logo: "🎓",
+      color: "from-cyan-400 to-blue-400",
+      achievements: [
+        "Acted as the official point of contact between the CS batch and the academic department.",
+        "Coordinated scheduling, announcements, and logistical support for academic activities.",
+        "Facilitated resolution of student queries and concerns with faculty and administration.",
+        "Maintained consistent communication to ensure smooth academic operations across the batch.",
+      ],
+      technologies: ["Leadership", "Communication", "Coordination", "Academic Management"],
+      type: "current" as const,
+      companySize: "Chitkara University",
       location: "Punjab, India",
     },
     {

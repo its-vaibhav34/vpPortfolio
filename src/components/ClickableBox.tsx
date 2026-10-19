@@ -6,7 +6,6 @@ import FloatingTooltip, { type TooltipConfig } from "./FloatingTooltip"
 import {
   FolderGit2,
   Cpu,
-  Mail,
   Terminal,
   BadgeCheck,
   Trophy,
@@ -67,13 +66,6 @@ const tooltipConfigs: Record<string, TooltipConfig> = {
     action: "",
     color: "#38bdf8",
     Icon: Terminal,
-  },
-  contact: {
-    tag: "",
-    title: "Get In Touch",
-    action: "",
-    color: "#10b981",
-    Icon: Mail,
   },
 }
 
