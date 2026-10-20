@@ -10,8 +10,21 @@ import ThreeDRoomExperience from "./components/ThreeDRoomExperience"
 useGLTF.preload("/3droom2.glb")
 
 export default function App() {
-  const [section, setSection] = useState("")
-  const [phase, setPhase] = useState<"landing" | "loading" | "room">("landing")
+  const [section, setSection] = useState(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).get("section") || ""
+    }
+    return ""
+  })
+  const [phase, setPhase] = useState<"landing" | "loading" | "room">(() => {
+    if (typeof window !== "undefined") {
+      const s = new URLSearchParams(window.location.search).get("section")
+      if (s) return "room"
+      const p = new URLSearchParams(window.location.search).get("phase")
+      if (p === "loading" || p === "room") return p
+    }
+    return "landing"
+  })
   const contentRef = useRef<HTMLDivElement>(null)
 
   const handleEnterPortfolio = useCallback(() => {

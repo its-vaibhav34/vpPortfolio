@@ -27,7 +27,7 @@ const sectionMeta: Record<string, { title: string; accent: string; icon: ReactNo
   },
   skills: {
     title: "Skills",
-    accent: "text-amber-400",
+    accent: "text-sky-400",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -54,7 +54,7 @@ const sectionMeta: Record<string, { title: string; accent: string; icon: ReactNo
   },
   achievements: {
     title: "Achievements",
-    accent: "text-amber-400",
+    accent: "text-cyan-400",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228M18.75 4.236V2.721" />
@@ -131,18 +131,18 @@ export default function Overlay({ section, onClose }: Props) {
       <div
         className={`pointer-events-auto relative w-full ${
           section === "skills" ? "max-w-none" : section === "about" ? "max-w-6xl" : "max-w-5xl"
-        } h-full overflow-y-auto overlay-scroll
+        } h-full overflow-y-auto ${section === "achievements" ? "overlay-scroll-cyan" : "overlay-scroll"}
           transition-all duration-500 ease-out
           ${isVisible ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"}
         `}
         style={{
           background: "linear-gradient(180deg, rgba(10,10,15,0.97), rgba(18,18,26,0.98))",
-          borderLeft: "1px solid rgba(245, 158, 11, 0.1)",
-          boxShadow: "-20px 0 60px rgba(0,0,0,0.5)",
+          borderLeft: section === "achievements" || section === "skills" ? "1px solid rgba(56, 189, 248, 0.15)" : "1px solid rgba(245, 158, 11, 0.1)",
+          boxShadow: section === "achievements" || section === "skills" ? "-20px 0 60px rgba(0,0,0,0.7), -1px 0 25px rgba(56, 189, 248, 0.04)" : "-20px 0 60px rgba(0,0,0,0.5)",
         }}
       >
         {/* Header */}
-        <div className="sticky top-0 z-20 px-8 py-6 flex items-center justify-between"
+        <div className="sticky top-0 z-20 px-5 sm:px-8 py-4 sm:py-6 flex items-center justify-between"
           style={{
             background: "linear-gradient(180deg, rgba(10,10,15,0.98) 60%, transparent)",
           }}
@@ -159,7 +159,7 @@ export default function Overlay({ section, onClose }: Props) {
             onClick={onClose}
             className="w-10 h-10 rounded-full flex items-center justify-center
                        text-stone-500 hover:text-stone-200 hover:bg-stone-800/50
-                       transition-all duration-200"
+                       transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400/50"
             aria-label="Close panel"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -169,7 +169,7 @@ export default function Overlay({ section, onClose }: Props) {
         </div>
 
         {/* Content */}
-        <div className="px-8 pb-12">
+        <div className="px-4 sm:px-8 pb-12">
           {isLoading ? (
             <LoadingShimmer />
           ) : (

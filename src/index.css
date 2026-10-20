@@ -403,6 +403,24 @@
   scrollbar-color: var(--amber) transparent;
 }
 
+.overlay-scroll-cyan::-webkit-scrollbar {
+  width: 5px;
+}
+.overlay-scroll-cyan::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overlay-scroll-cyan::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, rgba(34, 211, 238, 0.4), rgba(56, 189, 248, 0.2));
+  border-radius: 99px;
+}
+.overlay-scroll-cyan::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, rgba(34, 211, 238, 0.7), rgba(56, 189, 248, 0.4));
+}
+.overlay-scroll-cyan {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 211, 238, 0.4) transparent;
+}
+
 /* ═══════════════════════════════════════════
    Film Grain Overlay (subtle texture)
    ═══════════════════════════════════════════ */

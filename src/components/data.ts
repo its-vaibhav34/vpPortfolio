@@ -178,6 +178,7 @@ export const sections = {
       logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg",
       color: "from-orange-400 to-yellow-500",
       category: "Cloud",
+      
     },
     {
       name: "PostgreSQL",
