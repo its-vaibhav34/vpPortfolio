@@ -193,45 +193,21 @@ export const sections = {
     availability: "Open to opportunities",
   },
 
-  // 🎓 CERTIFICATES & RECOGNITIONS
-  certificates: [
-    {
-      title: "FormulaHacks 2025 Winner",
-      issuer: "FormulaHacks",
-      link: "https://github.com/its-vaibhav34",
-      date: "2025",
-      skills: ["Automotive Simulation", "Interactive 3D", "Physics"],
-      level: "1st Place",
-      credentialId: "FH2025-WINNER",
-    },
-    {
-      title: "Hacknexus 1.0 Winner",
-      issuer: "Hacknexus",
-      link: "https://github.com/its-vaibhav34",
-      date: "2025",
-      skills: ["RAG Pipelines", "Gemini API", "Pinecone", "LangChain"],
-      level: "1st Place",
-      credentialId: "HN1.0-WINNER",
-    },
-    {
-      title: "Bharat Techx 2.0 Winner",
-      issuer: "Bharat Techx",
-      link: "https://github.com/its-vaibhav34",
-      date: "2025",
-      skills: ["Full Stack", "Education Tech", "React.js", "Node.js"],
-      level: "1st Place",
-      credentialId: "BT2.0-WINNER",
-    },
-    {
-      title: "NIT Jalandhar National Hackathon",
-      issuer: "NIT Jalandhar",
-      link: "https://github.com/its-vaibhav34",
-      date: "2025",
-      skills: ["Top 4 Nationwide", "Problem Solving", "System Architecture"],
-      level: "Top 4 / 1000+",
-      credentialId: "NITJ-TOP4",
-    },
-  ],
+  // 🎓 PROFESSIONAL CERTIFICATES & CREDENTIALS
+  // Note: Hackathons, awards, and competitions are maintained in `achievements`.
+  // Real verified technical courses, cloud accreditations, and certifications appear here.
+  certificates: [] as Array<{
+    id: string
+    title: string
+    issuer: string
+    issueDate?: string
+    expiryDate?: string
+    category?: string
+    skills?: string[]
+    credentialUrl?: string
+    credentialId?: string
+    imageUrl?: string
+  }>,
 
   // 💼 EXPERIENCE & EDUCATION SECTION
   experience: [
@@ -243,13 +219,14 @@ export const sections = {
         "Developed Arduino and IoT-based projects for academic learning and technical competitions, working on hardware integration, circuit design, and embedded programming for real-world implementations.",
       logo: "⚡",
       color: "from-amber-400 to-orange-400",
+      category: "Technical Project",
       achievements: [
         "Developed Arduino and IoT-based projects for academic learning and technical competitions.",
         "Worked on hardware integration, circuit design, and embedded programming for real-world implementations.",
         "Completed end-to-end project development, including requirement analysis, testing, and deployment.",
       ],
       technologies: ["Arduino", "IoT Development", "Circuit Design", "Embedded Programming", "Hardware Integration"],
-      type: "current" as const,
+      type: "past" as const,
       companySize: "Live Project",
       location: "Punjab, India",
     },
@@ -261,13 +238,14 @@ export const sections = {
         "Contributing to the promotions and outreach team at Open Source Chandigarh, a community driving open-source culture across the region. Responsible for creating content, coordinating event promotion, and expanding community reach across platforms.",
       logo: "🌐",
       color: "from-violet-400 to-purple-400",
+      category: "Community & Outreach",
       achievements: [
         "Promoted open-source events and workshops to a growing developer community across Chandigarh and Punjab.",
         "Assisted in managing social media presence and digital outreach campaigns for community events.",
         "Collaborated with organizers to onboard contributors and increase event participation.",
       ],
       technologies: ["Community Building", "Content Creation", "Social Media", "Open Source", "Event Coordination"],
-      type: "current" as const,
+      type: "past" as const,
       companySize: "Community Org",
       location: "Chandigarh, India",
     },
@@ -279,6 +257,7 @@ export const sections = {
         "Elected as Class Representative for the Computer Science batch, serving as the primary liaison between students and faculty. Responsible for communicating academic updates, coordinating class activities, and representing student concerns at the departmental level.",
       logo: "🎓",
       color: "from-cyan-400 to-blue-400",
+      category: "Student Leadership",
       achievements: [
         "Acted as the official point of contact between the CS batch and the academic department.",
         "Coordinated scheduling, announcements, and logistical support for academic activities.",
@@ -286,7 +265,7 @@ export const sections = {
         "Maintained consistent communication to ensure smooth academic operations across the batch.",
       ],
       technologies: ["Leadership", "Communication", "Coordination", "Academic Management"],
-      type: "current" as const,
+      type: "past" as const,
       companySize: "Chitkara University",
       location: "Punjab, India",
     },
@@ -298,6 +277,7 @@ export const sections = {
         "Pursuing Bachelor of Engineering in Computer Science. Focused on core computer science fundamentals, full-stack software development, and technical competitions.",
       logo: "🎓",
       color: "from-blue-400 to-indigo-400",
+      category: "Academic Education",
       achievements: [
         "Academic Standing: CGPA 8.72 / 10.0",
         "Core Concepts: Data Structures & Algorithms (DSA), Object-Oriented Programming (OOP), DBMS, Operating Systems, Computer Networks.",

@@ -4,319 +4,359 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { sections } from "./data"
 
+/* ─── Experience Interface ─── */
 interface ExperienceItem {
   role: string
   company: string
   duration: string
   description: string
-  logo: string
-  color: string
-  achievements: string[]
-  technologies: string[]
-  type: "current" | "past"
-  companySize: string
-  location: string
+  logo?: string
+  color?: string
+  category?: string
+  achievements?: string[]
+  technologies?: string[]
+  type?: "current" | "past"
+  companySize?: string
+  location?: string
   website?: string
 }
 
-const typeConfig: Record<string, { label: string; dotColor: string; glowColor: string; borderAccent: string }> = {
-  current: {
-    label: "Active",
-    dotColor: "#10b981",
-    glowColor: "rgba(16, 185, 129, 0.4)",
-    borderAccent: "rgba(16, 185, 129, 0.2)",
-  },
-  past: {
-    label: "Completed",
-    dotColor: "#6366f1",
-    glowColor: "rgba(99, 102, 241, 0.4)",
-    borderAccent: "rgba(99, 102, 241, 0.2)",
-  },
+/* ─── Minimal Icons ─── */
+function ArrowUpRight({ className = "w-3 h-3" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
+    </svg>
+  )
 }
 
-function ExperienceCard({
+function ChevronDown({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  )
+}
+
+/* ─── Category-specific visual accents (Restrained, Editorial) ─── */
+function getCategoryMeta(category?: string) {
+  switch (category) {
+    case "Academic Education":
+      return {
+        tag: "Academic Education",
+        accentText: "text-sky-300",
+        borderAccent: "border-sky-500/20",
+        bgAccent: "bg-sky-950/30",
+        nodeDot: "border-sky-400 bg-sky-950",
+        nodeCore: "bg-sky-400",
+      }
+    case "Technical Project":
+      return {
+        tag: "Technical Project",
+        accentText: "text-cyan-300",
+        borderAccent: "border-cyan-500/20",
+        bgAccent: "bg-cyan-950/30",
+        nodeDot: "border-cyan-400/60 bg-stone-950",
+        nodeCore: "bg-cyan-400",
+      }
+    case "Community & Outreach":
+      return {
+        tag: "Community & Outreach",
+        accentText: "text-slate-300",
+        borderAccent: "border-white/10",
+        bgAccent: "bg-white/[0.03]",
+        nodeDot: "border-stone-500 bg-stone-950",
+        nodeCore: "bg-stone-400",
+      }
+    case "Student Leadership":
+      return {
+        tag: "Student Leadership",
+        accentText: "text-cyan-200",
+        borderAccent: "border-cyan-500/20",
+        bgAccent: "bg-cyan-950/30",
+        nodeDot: "border-cyan-400/60 bg-stone-950",
+        nodeCore: "bg-cyan-400",
+      }
+    default:
+      return {
+        tag: "Experience",
+        accentText: "text-stone-300",
+        borderAccent: "border-white/10",
+        bgAccent: "bg-white/[0.03]",
+        nodeDot: "border-stone-500 bg-stone-950",
+        nodeCore: "bg-stone-400",
+      }
+  }
+}
+
+/* ─── Individual Timeline Entry Component ─── */
+function TimelineEntry({
   item,
   index,
-  total,
+  isLast,
   isExpanded,
   onToggle,
 }: {
   item: ExperienceItem
   index: number
-  total: number
+  isLast: boolean
   isExpanded: boolean
   onToggle: () => void
 }) {
-  const cfg = typeConfig[item.type] ?? typeConfig.past
+  const meta = getCategoryMeta(item.category)
+  const isOngoing = item.type === "current"
+  const formattedDuration = item.duration.replace("–", "—")
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="relative flex gap-5 sm:gap-6"
+      transition={{ duration: 0.45, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="relative flex gap-4 sm:gap-6 group"
     >
-      {/* Left column: timeline spine */}
-      <div className="flex flex-col items-center select-none" style={{ minWidth: "20px" }}>
-        {/* Dot */}
+      {/* ── Left Column: Slim Editorial Spine & Node ── */}
+      <div className="flex flex-col items-center flex-shrink-0 select-none w-5">
+        {/* Understated Node Marker */}
         <div
-          className="relative mt-5 w-3.5 h-3.5 rounded-full flex-shrink-0 z-10 transition-transform duration-300"
-          style={{
-            backgroundColor: cfg.dotColor,
-            boxShadow: `0 0 10px ${cfg.glowColor}`,
-            transform: isExpanded ? "scale(1.2)" : "scale(1)",
-          }}
+          className={`relative mt-5 w-2.5 h-2.5 rounded-full border transition-all duration-300 z-10 ${
+            isOngoing
+              ? "border-cyan-400 bg-cyan-950 shadow-[0_0_8px_rgba(34,211,238,0.4)]"
+              : isExpanded
+              ? "border-cyan-400 bg-stone-950"
+              : "border-stone-600 bg-stone-900 group-hover:border-stone-400"
+          }`}
         >
-          {item.type === "current" && (
-            <span
-              className="absolute inset-0 rounded-full animate-ping"
-              style={{ backgroundColor: cfg.dotColor, opacity: 0.35 }}
-            />
+          {isOngoing && (
+            <span className="absolute inset-0.5 rounded-full bg-cyan-400 animate-pulse" />
           )}
         </div>
-        {/* Connector line — hidden for last item */}
-        {index < total - 1 && (
+
+        {/* Continuous Slim Connecting Rail */}
+        {!isLast && (
           <div
-            className="flex-1 w-px mt-1.5"
+            className="flex-1 w-[1px] my-1 transition-colors duration-300"
             style={{
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02))",
-              minHeight: "32px",
+              background: isExpanded
+                ? "linear-gradient(to bottom, rgba(56, 189, 248, 0.3), rgba(255, 255, 255, 0.05))"
+                : "linear-gradient(to bottom, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02))",
             }}
           />
         )}
       </div>
 
-      {/* Right column: card */}
-      <div
-        className="flex-1 mb-5 cursor-pointer group overflow-hidden rounded-xl transition-all duration-300"
-        onClick={onToggle}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            onToggle()
-          }
-        }}
+      {/* ── Right Column: Editorial Record Card ── */}
+      <article
+        className="flex-1 mb-6 rounded-xl transition-all duration-300 overflow-hidden"
         style={{
           background: isExpanded
-            ? "linear-gradient(135deg, rgba(30, 30, 52, 0.85), rgba(18, 18, 28, 0.95))"
-            : "linear-gradient(135deg, rgba(24, 24, 38, 0.5), rgba(15, 15, 22, 0.6))",
+            ? "linear-gradient(150deg, rgba(20, 22, 34, 0.8), rgba(12, 14, 22, 0.9))"
+            : "linear-gradient(150deg, rgba(16, 18, 26, 0.45), rgba(10, 12, 18, 0.55))",
           border: isExpanded
-            ? `1px solid ${cfg.borderAccent}`
-            : "1px solid rgba(255, 255, 255, 0.06)",
-          boxShadow: isExpanded ? `0 8px 30px rgba(0, 0, 0, 0.35), 0 0 15px ${cfg.glowColor}` : "none",
+            ? "1px solid rgba(56, 189, 248, 0.22)"
+            : "1px solid rgba(255, 255, 255, 0.05)",
+          boxShadow: isExpanded
+            ? "0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.05)"
+            : "0 2px 10px rgba(0, 0, 0, 0.2)",
         }}
       >
-        {/* Top subtle highlight */}
+        {/* Subtle Top Rim Highlight */}
         <div
-          className="h-[1px] transition-all duration-500"
+          className="h-[1px] w-full transition-opacity duration-300"
           style={{
             background: isExpanded
-              ? `linear-gradient(90deg, transparent, ${cfg.dotColor}88, transparent)`
-              : "linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)",
+              ? "linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent)"
+              : "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent)",
           }}
         />
 
-        <div className="p-5 sm:p-6">
-          {/* Header row */}
-          <div className="flex items-start justify-between gap-4 mb-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <h3
-                  className="font-display text-base sm:text-lg font-semibold text-stone-100 leading-snug group-hover:text-white transition-colors duration-200"
-                >
-                  {item.role}
-                </h3>
-                <span
-                  className="text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full"
-                  style={{
-                    color: cfg.dotColor,
-                    background: `${cfg.dotColor}15`,
-                    border: `1px solid ${cfg.dotColor}30`,
-                  }}
-                >
-                  {cfg.label}
+        <div className="p-5 sm:p-6 md:p-7 space-y-4">
+          {/* ── Top Header Row: Category Eyebrow & Date Metadata ── */}
+          <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-white/[0.04]">
+            {/* Category tag */}
+            <div className="flex items-center gap-2">
+              <span
+                className={`font-mono text-[10.5px] uppercase tracking-widest px-2 py-0.5 rounded border ${meta.bgAccent} ${meta.borderAccent} ${meta.accentText}`}
+              >
+                {meta.tag}
+              </span>
+              {isOngoing && (
+                <span className="font-mono text-[10.5px] tracking-wide text-cyan-400 bg-cyan-950/40 border border-cyan-500/30 px-2 py-0.5 rounded">
+                  Active Program
                 </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                <span className="font-medium text-stone-300">
-                  {item.company}
-                </span>
-                <span className="text-stone-600 text-xs">·</span>
-                <span className="text-xs font-mono text-stone-400">{item.location}</span>
-                {item.companySize && (
-                  <>
-                    <span className="text-stone-600 text-xs">·</span>
-                    <span className="text-[11px] font-mono text-stone-500">{item.companySize}</span>
-                  </>
-                )}
-              </div>
+              )}
             </div>
 
-            {/* Duration */}
-            <div className="flex-shrink-0 text-right">
-              <span className="text-xs font-mono font-medium text-stone-400 bg-stone-900/60 px-2.5 py-1 rounded-md border border-stone-800">
-                {item.duration}
-              </span>
+            {/* Date range & location */}
+            <div className="flex items-center gap-2 font-mono text-xs text-stone-400">
+              <span>{formattedDuration}</span>
+              {item.location && (
+                <>
+                  <span className="text-stone-600">·</span>
+                  <span className="text-stone-500 hidden sm:inline">{item.location}</span>
+                </>
+              )}
             </div>
           </div>
 
-          {/* Description */}
-          <p
-            className="text-sm text-stone-400 leading-relaxed transition-all duration-300"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: isExpanded ? 99 : 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
+          {/* ── Primary Information Hierarchy: Role & Organization ── */}
+          <div>
+            <h3 className="font-display text-lg sm:text-xl font-bold text-stone-100 tracking-tight leading-snug group-hover:text-white transition-colors">
+              {item.role}
+            </h3>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              <span className="text-sm sm:text-[15px] font-medium text-stone-300">
+                {item.company}
+              </span>
+              {item.companySize && (
+                <>
+                  <span className="text-stone-600 text-xs">·</span>
+                  <span className="text-xs font-mono text-stone-500">{item.companySize}</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* ── Concise Scannable Description ── */}
+          <p className="text-xs sm:text-sm text-stone-400 leading-relaxed max-w-3xl">
             {item.description}
           </p>
 
-          {/* Skills / Tech */}
-          {item.technologies && item.technologies.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-3.5">
-              {item.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className="text-[11px] font-mono px-2.5 py-0.5 rounded-md transition-colors duration-200"
-                  style={{
-                    color: isExpanded ? "rgba(220, 220, 240, 0.85)" : "rgba(160, 155, 150, 0.75)",
-                    background: isExpanded ? "rgba(255, 255, 255, 0.06)" : "rgba(255, 255, 255, 0.03)",
-                    border: isExpanded ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(255, 255, 255, 0.04)",
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Expanded: achievements */}
-          <AnimatePresence>
-            {isExpanded && item.achievements && item.achievements.length > 0 && (
+          {/* ── Expanded Content (Detailed Bullet Points, Highlights, Tech) ── */}
+          <AnimatePresence initial={false}>
+            {isExpanded && (
               <motion.div
+                id={`experience-details-${index}`}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 className="overflow-hidden"
               >
-                <div
-                  className="mt-5 pt-4 space-y-2.5"
-                  style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-stone-500 mb-2">
-                    Key Highlights & Responsibilities
-                  </p>
-                  {item.achievements.map((ach, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.25, delay: 0.05 + i * 0.04 }}
-                      className="flex items-start gap-2.5"
-                    >
-                      <div
-                        className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                        style={{ backgroundColor: cfg.dotColor }}
-                      />
-                      <span className="text-sm text-stone-300 leading-relaxed">
-                        {ach}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
+                <div className="pt-4 mt-2 space-y-4 border-t border-white/[0.05]">
+                  {/* Key Highlights / Responsibilities */}
+                  {item.achievements && item.achievements.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-mono uppercase tracking-widest text-stone-400">
+                        Key Responsibilities & Deliverables
+                      </div>
+                      <ul className="space-y-2">
+                        {item.achievements.map((point, idx) => (
+                          <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-300 leading-relaxed">
+                            <span className="text-cyan-400/80 mt-1 select-none text-xs">―</span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
-                {item.website && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="mt-4"
-                  >
-                    <a
-                      href={item.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
-                    >
-                      Visit Organization
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                      </svg>
-                    </a>
-                  </motion.div>
-                )}
+                  {/* Skills & Technologies */}
+                  {item.technologies && item.technologies.length > 0 && (
+                    <div className="pt-1">
+                      <div className="text-[11px] font-mono uppercase tracking-widest text-stone-400 mb-2">
+                        Core Competencies & Tools
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {item.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2 py-0.5 rounded bg-white/[0.025] border border-white/[0.06] font-mono text-[11px] text-stone-300"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Optional External Website Link */}
+                  {item.website && (
+                    <div className="pt-2">
+                      <a
+                        href={item.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 rounded px-1 -ml-1"
+                      >
+                        <span>Visit Organization Portal</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Expand/Collapse Chevron indicator */}
-          <div className="flex items-center justify-between mt-4 pt-2 border-t border-white/[0.03]">
-            <span className="text-[11px] font-mono text-stone-500 group-hover:text-stone-400 transition-colors">
-              {isExpanded ? "Click to collapse" : "Click to view details"}
-            </span>
-            <motion.div
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="text-stone-500 group-hover:text-stone-300 transition-colors"
+          {/* ── Understated Accessible Disclosure Button ── */}
+          <div className="pt-2 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded={isExpanded}
+              aria-controls={`experience-details-${index}`}
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-stone-400 hover:text-cyan-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400/50 rounded py-1 px-2 -ml-2 hover:bg-white/[0.03]"
             >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M4 6L8 10L12 6"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </motion.div>
+              <span>{isExpanded ? "Collapse details" : "Explore highlights"}</span>
+              <motion.span
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="inline-block"
+              >
+                <ChevronDown className="w-3.5 h-3.5" />
+              </motion.span>
+            </button>
           </div>
         </div>
-      </div>
+      </article>
     </motion.div>
   )
 }
 
+/* ─── Main TimelineExperience Component ─── */
 export default function TimelineExperience() {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
   const experienceData = sections.experience as ExperienceItem[]
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-end justify-between mb-6 pb-4"
-        style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.05)" }}
-      >
-        <div>
-          <p className="text-[11px] font-mono text-stone-400 tracking-[0.2em] uppercase mb-1.5">
-            Experience & Education
-          </p>
-          <p className="text-sm text-stone-400 max-w-lg leading-relaxed">
-            Roles, leadership responsibilities, and academic milestones that have shaped my technical and engineering foundation.
-          </p>
+    <div className="space-y-8 select-text">
+      {/* ── Section Introduction Header ── */}
+      <header className="space-y-4 pb-6 border-b border-white/[0.06]">
+        {/* Technical Eyebrow */}
+        <div className="flex items-center gap-2.5 font-mono text-[11px] tracking-widest text-cyan-400 uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse" />
+          <span>CHRONICLE_ARCHIVE // ROLES & ACADEMIA</span>
         </div>
-        <span className="text-[11px] font-mono text-stone-500 bg-stone-900/60 px-2.5 py-1 rounded-md border border-stone-800">
-          {experienceData.length} records
-        </span>
-      </motion.div>
 
-      {/* Timeline List */}
-      <div>
+        {/* Heading & Summary */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-stone-100 tracking-tight">
+              Experience & Education
+            </h1>
+            <p className="mt-2 text-sm sm:text-base text-stone-400 max-w-xl leading-relaxed">
+              A chronicle of hands-on engineering projects, open-source community outreach, departmental leadership, and academic grounding.
+            </p>
+          </div>
+
+          {/* Record Count Badge */}
+          <div className="flex items-center gap-2 font-mono text-xs select-none">
+            <div className="px-3 py-1.5 rounded-md bg-white/[0.02] border border-white/[0.07] text-stone-300">
+              <span className="text-cyan-400 font-semibold mr-1.5">{experienceData.length}</span>
+              <span>Milestones Recorded</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Slim Editorial Timeline List ── */}
+      <div className="pt-2">
         {experienceData.map((item, index) => (
-          <ExperienceCard
+          <TimelineEntry
             key={`${item.role}-${item.company}-${index}`}
             item={item}
             index={index}
-            total={experienceData.length}
+            isLast={index === experienceData.length - 1}
             isExpanded={expandedIndex === index}
             onToggle={() =>
               setExpandedIndex(expandedIndex === index ? null : index)
@@ -324,6 +364,12 @@ export default function TimelineExperience() {
           />
         ))}
       </div>
+
+      {/* ── Refined Minimalist Section Footer ── */}
+      <footer className="pt-6 pb-2 border-t border-white/[0.05] flex items-center justify-between text-xs font-mono text-stone-400">
+        <span>TIMELINE_END // VERIFIED RECORD ARCHIVE</span>
+        <span className="text-stone-400">Chitkara University & Open Source</span>
+      </footer>
     </div>
   )
 }
